@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Grapevine Ford Contact</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+            color: white;
+            text-align: center;
+        }
+        .container {
+            padding: 40px;
+        }
+        h1 {
+            margin-bottom: 10px;
+        }
+        p {
+            opacity: 0.8;
+            margin-bottom: 30px;
+        }
+        .btn {
+            background: white;
+            color: #1e3a5f;
+            border: none;
+            padding: 16px 32px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Grapevine Ford</h1>
+        <p>Tap below to save our contact</p>
+        <button class="btn" onclick="addContact()">Add Contact</button>
+    </div>
+
+    <script>
+        const vCardData = `BEGIN:VCARD
+VERSION:3.0
+FN:GRAPEVINE FORD
+ORG:Grapevine Ford
+TEL;TYPE=WORK,VOICE:817-756-1655
+END:VCARD`;
+
+        function addContact() {
+            const blob = new Blob([vCardData], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Grapevine_Ford.vcf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        // Auto-trigger on page load
+        window.onload = function() {
+            setTimeout(addContact, 500);
+        };
+    </script>
+</body>
+</html>
