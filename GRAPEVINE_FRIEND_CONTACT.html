@@ -17,23 +17,110 @@
             text-align: center;
         }
         .container {
-            padding: 40px;
+            padding: 20px;
+            max-width: 340px;
         }
         h1 {
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            font-size: 24px;
         }
-        p {
+        .subtitle {
             opacity: 0.8;
-            margin-bottom: 30px;
+            margin-bottom: 24px;
+            font-size: 14px;
         }
+
+        /* Contact Card Preview */
+        .contact-card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+            color: #1e3a5f;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        .contact-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #1e3a5f 0%, #2d5a87 100%);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            color: white;
+            font-weight: bold;
+        }
+        .contact-name {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .contact-org {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+        .contact-phone {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #f0f4f8;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e3a5f;
+        }
+        .phone-icon {
+            font-size: 18px;
+        }
+
+        /* Pulsing Button */
         .btn {
             background: white;
             color: #1e3a5f;
             border: none;
             padding: 16px 32px;
             font-size: 18px;
-            border-radius: 8px;
+            border-radius: 50px;
             cursor: pointer;
+            font-weight: 700;
+            animation: pulse 2s infinite;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.3);
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 4px 20px rgba(255,255,255,0.3); }
+            50% { transform: scale(1.05); box-shadow: 0 6px 30px rgba(255,255,255,0.5); }
+            100% { transform: scale(1); box-shadow: 0 4px 20px rgba(255,255,255,0.3); }
+        }
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Instructions */
+        .instructions {
+            margin-top: 24px;
+            font-size: 13px;
+            opacity: 0.9;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .step-num {
+            background: rgba(255,255,255,0.2);
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
             font-weight: 600;
         }
     </style>
@@ -41,8 +128,35 @@
 <body>
     <div class="container">
         <h1>Grapevine Ford</h1>
-        <p>Tap below to save our contact</p>
-        <button class="btn" onclick="addContact()">Add Contact</button>
+        <p class="subtitle">Save our contact to your phone</p>
+
+        <!-- Contact Card Preview -->
+        <div class="contact-card">
+            <div class="contact-icon">GF</div>
+            <div class="contact-name">GRAPEVINE FORD</div>
+            <div class="contact-org">Grapevine Ford</div>
+            <div class="contact-phone">
+                <span class="phone-icon">📞</span>
+                817-756-1655
+            </div>
+        </div>
+
+        <button class="btn" onclick="addContact()">＋ Add to Contacts</button>
+
+        <div class="instructions">
+            <div class="step">
+                <span class="step-num">1</span>
+                <span>Tap the button above</span>
+            </div>
+            <div class="step">
+                <span class="step-num">2</span>
+                <span>Tap <strong>"Create New Contact"</strong></span>
+            </div>
+            <div class="step">
+                <span class="step-num">3</span>
+                <span>Tap <strong>"Done"</strong> to save</span>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -64,11 +178,6 @@ END:VCARD`;
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
         }
-
-        // Auto-trigger on page load
-        window.onload = function() {
-            setTimeout(addContact, 500);
-        };
     </script>
 </body>
 </html>
