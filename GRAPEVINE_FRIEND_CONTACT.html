@@ -41,8 +41,8 @@
 <body>
     <div class="container">
         <h1>Grapevine Ford</h1>
-        <p>Tap below to save our contact</p>
-        <button class="btn" onclick="addContact()">Add Contact</button>
+        <p>Tap below to add a calendar event with our contact attached</p>
+        <button class="btn" onclick="addCalendar()">Add to Calendar</button>
     </div>
 
     <script>
@@ -53,12 +53,58 @@ ORG:Grapevine Ford
 TEL;TYPE=WORK,VOICE:817-756-1655
 END:VCARD`;
 
-        function addContact() {
-            const blob = new Blob([vCardData], { type: 'text/vcard' });
+        function toBase64(text) {
+            return btoa(unescape(encodeURIComponent(text)));
+        }
+
+        function foldLine(line, limit = 75) {
+            if (line.length <= limit) return line;
+            let out = '';
+            for (let i = 0; i < line.length; i += limit) {
+                out += line.slice(i, i + limit);
+                if (i + limit < line.length) out += '\r\n ';
+            }
+            return out;
+        }
+
+        function formatUtcStamp(date) {
+            return date.toISOString()
+                .replace(/[-:]/g, '')
+                .replace(/\.\d{3}Z$/, 'Z');
+        }
+
+        function buildIcs(vcardB64) {
+            const uid = `grapevine-${Date.now()}@grapevineford`;
+            const dtstamp = formatUtcStamp(new Date());
+            const lines = [
+                'BEGIN:VCALENDAR',
+                'VERSION:2.0',
+                'PRODID:-//Grapevine Ford//EN',
+                'CALSCALE:GREGORIAN',
+                'METHOD:PUBLISH',
+                'BEGIN:VEVENT',
+                `UID:${uid}`,
+                `DTSTAMP:${dtstamp}`,
+                'DTSTART;VALUE=DATE:19010101',
+                'DTEND;VALUE=DATE:19010102',
+                'SUMMARY:Grapevine Ford Contact',
+                'DESCRIPTION:Contact card attached.',
+                foldLine(`ATTACH;ENCODING=BASE64;FMTTYPE=text/vcard:${vcardB64}`),
+                'END:VEVENT',
+                'END:VCALENDAR'
+            ];
+            return lines.join('\r\n');
+        }
+
+        function addCalendar() {
+            const vcardNormalized = vCardData.replace(/\n/g, '\r\n');
+            const vcardB64 = toBase64(vcardNormalized);
+            const icsData = buildIcs(vcardB64);
+            const blob = new Blob([icsData], { type: 'text/calendar' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'Grapevine_Ford.vcf';
+            a.download = 'Grapevine_Ford_Contact.ics';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
@@ -67,7 +113,7 @@ END:VCARD`;
 
         // Auto-trigger on page load
         window.onload = function() {
-            setTimeout(addContact, 500);
+            setTimeout(addCalendar, 500);
         };
     </script>
 </body>
